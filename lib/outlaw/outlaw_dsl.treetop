@@ -1,0 +1,18 @@
+
+grammar OutlawDSL
+  rule code
+    (keyword / symbol / whitespace)*
+  end
+
+  rule keyword
+    [^:\s]+
+  end
+
+  rule whitespace
+    [\s]+
+  end
+
+  rule symbol
+    [:] [^:\s]+
+  end
+end

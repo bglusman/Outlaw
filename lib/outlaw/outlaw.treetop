@@ -1,0 +1,14 @@
+
+grammar Outlaw
+  rule code
+    (keyword / symbol)*
+  end
+
+  rule keyword
+    [^:]+
+  end
+
+  rule symbol
+    :[^:]+
+  end
+end
