@@ -1,0 +1,7 @@
+
+module Outlaw
+	outlaw "@@",                "Class variables are evil"
+	outlaw "protected",         "use private or public, protected is silly in ruby"
+	outlaw "module :token end", "nest modules to avoid empty module declarations"
+  outlaw "eval",              "never eval, rarely class_eval or instance_eval, but never eval"
+end
