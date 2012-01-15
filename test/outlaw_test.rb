@@ -24,7 +24,7 @@ CODE
 )
 
       result1.must_equal true
-      #result2.must_equal false
+      result2.must_equal false
     end
 
     it "returns a block from build_block method" do

@@ -21,6 +21,7 @@ module Outlaw
             next unless token.match pattern.first
             return true if test_rule(program, index, pattern)
           end
+          return false
         end
       end
 
