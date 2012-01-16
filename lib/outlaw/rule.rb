@@ -18,11 +18,11 @@ module Outlaw
           code = program[index]
           part = pattern[pattern_index]
 
-          next if IGNORE_TYPES.include? lex(code)
+          next if IGNORE_TYPES.include? token_type(code)
 
           if (part.respond_to?(:source) && code.match(part))
             pattern_index += 1
-          elsif (part.respond_to?(:to_sym) && param_type_equal(lex(code), part))
+          elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
             #check count on first and count down subseq matches
             if params[part].first.nil?
               params[part][0] = code
@@ -49,8 +49,8 @@ module Outlaw
         PARAM_TYPES.include? lex
       end
 
-      def lex(code)
-        Ripper.lex(code).flatten(1)[1]
+      def token_type(code)
+        Ripper.lex(code).flatten(1)[1] #Ripper's name for token type is returned in array
       end
 
       def params_count_hash(pattern)
