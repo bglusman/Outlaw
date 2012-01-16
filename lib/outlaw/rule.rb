@@ -20,6 +20,8 @@ module Outlaw
 
           next if IGNORE_TYPES.include? token_type(code)
 
+          #RegEx responds to .source but not .to_sym, symbols vice versa.
+          #Is this really better than checking is_type_of? Smells since not using methods
           if (part.respond_to?(:source) && code.match(part))
             pattern_index += 1
           elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
