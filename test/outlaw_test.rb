@@ -9,7 +9,7 @@ module Outlaw
       rule2 = LawDSL.parse(code2)
       code3 = "eval"
       rule3 = LawDSL.parse(code3)
-      code4 = "module :token end"
+      code4 = "module :name end"
       rule4 = LawDSL.parse(code4)
 bad_file = <<CODE
 module Thing
@@ -55,7 +55,7 @@ CODE
     end
 
     it "returns a block from build_block method" do
-      block = LawDSL.build_block("@@")
+      block = LawDSL.send(:build_block,"@@")
       assert_kind_of Proc, block
     end
   end

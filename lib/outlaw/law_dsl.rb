@@ -3,15 +3,38 @@ module Outlaw
     class << self
       def parse(restriction)
         tokens = restriction.split
+        parsed_restriction = []
         tokens.each_with_index do |token, i|
-          tokens[i] = tokens[i][1..-1].to_sym if parameter?(token)
-          tokens[i] = /#{tokens[i]}/ unless parameter?(token)
+          case tokens[i]
+          when special_case?(token)
+            next #TODO
+          when defined_collection?(token)
+            next #TODO
+          when parameter?(token)
+            parsed_restriction << string_to_sym(token[i])
+          else
+            parsed_restriction << /#{tokens[i]}/
+          end
         end
-        Rule.new(&build_block(tokens))
+        Rule.new(&build_block(parsed_restriction))
       end
+
+      private
 
       def parameter?(token)
         token[0].chr == ':'
+      end
+
+      def special_case?(token)
+        SPECIAL_CASES.include? token
+      end
+
+      def defined_collection?(token)
+        parameter?(token) && const_defined?(string_to_sym(token.upcase))
+      end
+
+      def string_to_sym(str)
+        str[1..-1].to_sym
       end
 
       def build_block(pattern)

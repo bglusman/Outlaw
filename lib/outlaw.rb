@@ -7,7 +7,12 @@ module Outlaw
     law = LawDSL.parse restriction
     Enforcement.add(law, message)
   end
-  PARAM_TYPES = [:on_const, :on_ident, :on_ivar, :on_cvar]
-  IGNORE_TYPES = [:on_sp, :on_nl, :on_op, :on_ignored_nl, :on_rparen, :on_lparen]
+  PARAM_TYPES         = [:on_const, :on_ident, :on_ivar, :on_cvar]
+  IGNORE_TYPES        = [:on_sp, :on_nl, :on_op, :on_ignored_nl, :on_rparen, :on_lparen]
+  SPECIAL_CASES       = [:disjoint_code_seperator] #need to work on naming here
+  CORE_CLASSES        = []
+  File.open('core_classes.txt') {|io| io.each_line {|line| CORE_CLASSES << line.chomp}}
+  DEFINED_COLLECTIONS = [CORE_CLASSES]
+
 
 end
