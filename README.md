@@ -15,6 +15,7 @@ From the included outlawed.rb example file for custom rule definition:
 ### Proposed syntax for DSL:
 
   A defined collection exists for core classes, such that
+
     outlaw "class :symbol < :core_class",
                               "core classes implemented in c, can cause bad mojo"
 
