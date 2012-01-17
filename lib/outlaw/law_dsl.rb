@@ -4,16 +4,16 @@ module Outlaw
       def parse(restriction)
         tokens = restriction.split
         parsed_restriction = []
-        tokens.each_with_index do |token, i|
-          case tokens[i]
+        tokens.each do |token|
+          case
           when special_case?(token)
             next #TODO
           when defined_collection?(token)
             next #TODO
           when parameter?(token)
-            parsed_restriction << string_to_sym(token[i])
+            parsed_restriction << string_to_sym(token)
           else
-            parsed_restriction << /#{tokens[i]}/
+            parsed_restriction << /#{token}/
           end
         end
         Rule.new(&build_block(parsed_restriction))
