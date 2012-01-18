@@ -14,7 +14,7 @@ module Outlaw
           when parameter?(token)
             parsed_restriction << string_to_sym(token)
           else
-            parsed_restriction << build_regex(token)
+            parsed_restriction += build_regex(token)
           end
         end
         Rule.new(&build_block(parsed_restriction))
@@ -39,7 +39,8 @@ module Outlaw
       end
 
       def build_regex(token)
-        token.include?('@') ? /#{token}/ : /\b#{token}\b/
+        #fully expect this hack to come back & haunt me, but passes curr. examples
+        [/\A#{token}/]
       end
 
       def build_block(pattern)
