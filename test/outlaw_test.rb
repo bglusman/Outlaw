@@ -1,5 +1,4 @@
 require_relative 'test_helper'
-require 'pry'
 
 module Outlaw
   describe LawDSL do
@@ -89,7 +88,7 @@ end
 CODE
 
       module_result   = rule4.call(module_file)
-      result4a = rule4.call(@okay_file)
+      result4a        = rule4.call(@okay_file)
 
       module_result.must_equal true
       result4a.must_equal false
@@ -107,10 +106,60 @@ class Whatever < String
 end
 CODE
       core_result     = rule5.call(core_file)
-      result5a = rule5.call(@okay_file)
+      result5a        = rule5.call(@okay_file)
       core_result     .must_equal true
       result5a.must_equal false
     end
+
+
+#     it "correctly builds rule for unless else" do
+#       code6 = "unless :symbols
+#               :disjoint_code_seperator
+#               else :more_symbols"
+#       rule6 = LawDSL.parse(code6)
+
+# core_file = <<CODE
+# class Whatever < String
+#   def badthing(here)
+#     @here = here
+#   end
+# end
+# CODE
+
+    it "correctly builds rule for rescue nil" do
+      code7 = "rescue nil"
+      rule7 = LawDSL.parse(code7)
+
+nil_file = <<CODE
+begin
+  "hi"
+rescue nil
+  "bye"
+end
+CODE
+      nil_result     = rule7.call(nil_file)
+      result7a       = rule7.call(@okay_file)
+      nil_result     .must_equal true
+      result7a.must_equal false
+    end
+
+    it "correctly builds rule for inherit struct.new" do
+      code8 = "class :symbol < Struct.new"
+      rule8 = LawDSL.parse(code8)
+
+      struct_file = <<CODE
+class MyClass < Struct.new("Customer", :name, :address)
+CODE
+
+      struct_result   = rule8.call(struct_file)
+      result8a        = rule8.call(@okay_file)
+
+      struct_result.must_equal true
+      result8a.must_equal false
+    end
+
+
+#     end
 
     it "returns a hash with key counts and nil placeholders" do
       params = Rule.send(:params_count_hash, [/module/, :token1, :token2, :token1, /class/, :token3, /end/])

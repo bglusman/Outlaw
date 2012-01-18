@@ -8,8 +8,9 @@ module Outlaw
           case
           when special_case?(token)
             next #TODO
+          when multipart?(token)          #this jewel is for Const.new and similar stuff
+            parsed_restriction += Ripper.lex(token).reduce([]){|a, t| a << /#{t[2]}/}
           when defined_collection?(token)
-            #binding.pry
             parsed_restriction << Outlaw.const_get(string_to_sym(token.upcase))
           when parameter?(token)
             parsed_restriction << string_to_sym(token)
@@ -41,6 +42,10 @@ module Outlaw
       def build_regex(token)
         #fully expect this hack to come back & haunt me, but passes curr. examples
         [/\A#{token}/]
+      end
+
+      def multipart?(token)
+        !parameter?(token) && Ripper.lex(token).count > 1
       end
 
       def build_block(pattern)
