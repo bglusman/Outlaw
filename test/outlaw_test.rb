@@ -12,19 +12,40 @@ module Outlaw
       rule3 = LawDSL.parse(code3)
       code4 = "module :name end"
       rule4 = LawDSL.parse(code4)
-      code5 = "class :symbol < Henchmen"
-      rule5 = LawDSL.parse(code4)
-bad_file = <<CODE
-module Thing
-end
+      code5 = "class :symbol < :core_class"
+      rule5 = LawDSL.parse(code5)
 
-class Whatever < String
+
+class_var_file = <<CODE
   def badthing(here)
     @@here = here
   end
+CODE
+
+protected_file = <<CODE
+class Whatever
   protected
   def not_really
+    :false
+  end
+end
+CODE
+
+eval_file = <<CODE
+  def not_really
     eval('1 + 1')
+  end
+CODE
+
+module_file = <<CODE
+module Thing
+end
+CODE
+
+core_file = <<CODE
+class Whatever < String
+  def badthing(here)
+    @here = here
   end
 end
 CODE
@@ -35,12 +56,18 @@ class Whatever < Set
     @here = here
   end
 end
+
+module WithContent
+  def sumthin
+    class_eval(1 + 1)
+  end
+end
 CODE
-      result1 = rule1.call(bad_file)
-      result2 = rule2.call(bad_file)
-      result3 = rule3.call(bad_file)
-      result4 = rule4.call(bad_file)
-      result5 = rule5.call(bad_file)
+      class_result    = rule1.call(class_var_file)
+      protected_result= rule2.call(protected_file)
+      eval_result     = rule3.call(eval_file)
+      module_result   = rule4.call(module_file)
+      core_result     = rule5.call(core_file)
 
       result1a = rule1.call(okay_file)
       result2a = rule2.call(okay_file)
@@ -48,10 +75,18 @@ CODE
       result4a = rule4.call(okay_file)
       result5a = rule5.call(okay_file)
 
-      binding.pry
 
-      [result1a, result2a, result3a, result4a, result5a].each {|r| r.must_equal false }
-      [result1, result2, result3, result4, result5].each {|r| r.must_equal true }
+      result1a.must_equal false
+      result2a.must_equal false
+      result3a.must_equal false
+      result4a.must_equal false
+      result5a.must_equal false
+
+      class_result    .must_equal true
+      protected_result.must_equal true
+      eval_result     .must_equal true
+      module_result   .must_equal true
+      core_result     .must_equal true
     end
 
     it "returns a hash with key counts and nil placeholders" do

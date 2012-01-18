@@ -14,7 +14,7 @@ module Outlaw
       def test(program, start_index, pattern)
         pattern_index = 0
         params = params_count_hash(pattern)
-        start_index.upto(pattern.length) do |index|
+        start_index.upto(program.length) do |index|
           code = program[index]
           part = pattern[pattern_index]
 
@@ -22,16 +22,16 @@ module Outlaw
 
           #RegEx responds to .source but not .to_sym, symbols vice versa.
           #Is this really better than checking is_type_of? Smells since not using methods
-          case
-          when (part.respond_to?(:to_a)   && part.include?(code))
+          if (part.respond_to?(:to_a)   && part.include?(code))
             pattern_index += 1
-          when (part.respond_to?(:source) && code.match(part))
+          elsif (part.respond_to?(:source) && code.match(part))
             pattern_index += 1
-          when (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
+          elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
             #check count on first and count down subseq matches
             if params[part].first.nil?
               params[part][0] = code
               params[part][1] -= 1
+              pattern_index += 1
             else
               if params[part].first == code
                 params[part][1] -= 1
@@ -43,8 +43,10 @@ module Outlaw
           else
             return false
           end
+          return true if pattern_index >= pattern.length
         end   #we got to the end of pattern, so it was matched
-        return true
+        return false
+        # got to end of program without end of pattern
       end
 
       private

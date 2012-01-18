@@ -9,11 +9,12 @@ module Outlaw
           when special_case?(token)
             next #TODO
           when defined_collection?(token)
-            parsed_restriction << get_const(string_to_sym(token.upcase))
+            #binding.pry
+            parsed_restriction << Outlaw.const_get(string_to_sym(token.upcase))
           when parameter?(token)
             parsed_restriction << string_to_sym(token)
           else
-            parsed_restriction << /#{token}/
+            parsed_restriction << build_regex(token)
           end
         end
         Rule.new(&build_block(parsed_restriction))
@@ -30,18 +31,22 @@ module Outlaw
       end
 
       def defined_collection?(token)
-        parameter?(token) && const_defined?(string_to_sym(token.upcase))
+        parameter?(token) && Outlaw.const_defined?(string_to_sym(token.upcase))
       end
 
       def string_to_sym(str)
         str[1..-1].to_sym
       end
 
+      def build_regex(token)
+        token.include?('@') ? /#{token}/ : /\b#{token}\b/
+      end
+
       def build_block(pattern)
         lambda do |file|
           program = Ripper.tokenize(file)
           program.each_with_index do |token, index|
-            next unless token.match pattern.first
+            next unless token.match(pattern.first)
             return true if Rule.test(program, index, pattern)
           end
           return false
