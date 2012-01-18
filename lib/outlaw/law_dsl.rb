@@ -9,7 +9,7 @@ module Outlaw
           when special_case?(token)
             next #TODO
           when defined_collection?(token)
-            next #TODO
+            parsed_restriction << get_const(string_to_sym(token.upcase))
           when parameter?(token)
             parsed_restriction << string_to_sym(token)
           else

@@ -22,9 +22,12 @@ module Outlaw
 
           #RegEx responds to .source but not .to_sym, symbols vice versa.
           #Is this really better than checking is_type_of? Smells since not using methods
-          if (part.respond_to?(:source) && code.match(part))
+          case
+          when (part.respond_to?(:to_a)   && part.include?(code))
             pattern_index += 1
-          elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
+          when (part.respond_to?(:source) && code.match(part))
+            pattern_index += 1
+          when (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
             #check count on first and count down subseq matches
             if params[part].first.nil?
               params[part][0] = code

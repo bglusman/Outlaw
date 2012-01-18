@@ -12,7 +12,7 @@ module Outlaw
   SPECIAL_CASES       = [:disjoint_code_seperator] #need to work on naming here
   CORE_CLASS          = []
   File.open('core_classes.txt') {|io| io.each_line {|line| CORE_CLASS << line.chomp}}
-  DEFINED_COLLECTIONS = [CORE_CLASS]
+  #DEFINED_COLLECTIONS = [CORE_CLASS] # planned to use, but unneeded for now
 
 
 end
