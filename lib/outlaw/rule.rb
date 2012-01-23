@@ -1,9 +1,14 @@
 module Outlaw
   class Rule
     NoDetectionBlockProvided = Class.new(StandardError)
-    def initialize(type=:ruby, scope=:file, &detection_block)
+    attr_reader :message, :restriction
+    def initialize(message, restriction, type=:ruby, scope=:file, &detection_block)
       raise NoDetectionBlockProvided unless detection_block
-      @type, @scope, @detection_block = type, scope, detection_block
+      @message          = message
+      @restriction      = restriction
+      @type             = type
+      @scope            = scope
+      @detection_block  = detection_block
     end
 
     def call(code)

@@ -1,14 +1,14 @@
 module Outlaw
   module LawDSL
     class << self
-      def parse(restriction)
+      def parse(restriction, message="")
         tokens = restriction.split
         parsed_restriction = []
         tokens.each do |token|
           case
           when special_case?(token)
             next #TODO
-          when multipart?(token)          #this jewel is for Const.new and similar stuff
+          when multipart?(token)                  #this jewel is for Const.new and similar stuff
             parsed_restriction += Ripper.lex(token).reduce([]){|a, t| a << /#{t[2]}/}
           when defined_collection?(token)
             parsed_restriction << Outlaw.const_get(string_to_sym(token.upcase))
@@ -18,7 +18,7 @@ module Outlaw
             parsed_restriction += build_regex(token)
           end
         end
-        Rule.new(&build_block(parsed_restriction))
+        Rule.new(message, restriction, &build_block(parsed_restriction))
       end
 
       private
