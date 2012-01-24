@@ -15,7 +15,7 @@ end
 
 module WithContent
   def sumthin
-    class_eval(1 + 1)
+    class_eval('1 + 1')
   end
 end
 CODE
