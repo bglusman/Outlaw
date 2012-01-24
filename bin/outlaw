@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
 require "outlaw"
-load "config.outlaw"
+load ".outlawed"
 
 puts Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")
