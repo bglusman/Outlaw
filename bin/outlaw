@@ -3,4 +3,4 @@
 require_relative "../lib/outlaw"
 load "config.outlaw"
 
-puts Outlaw.enforce(".")
+puts Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")
