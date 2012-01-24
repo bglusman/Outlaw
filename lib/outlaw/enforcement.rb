@@ -20,7 +20,7 @@ module Outlaw
       end
 
       def handle(file)
-        if file.include?(".rb")
+        if file.match(/.rb$/)
           text = File.open(file) {|f| f.read}
           laws.each do |law|
             if law.call(text)
