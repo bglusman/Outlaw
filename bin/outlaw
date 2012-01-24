@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/outlaw"
+load "config.outlaw"
+
+puts Outlaw.enforce(".")
