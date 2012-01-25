@@ -1,6 +1,20 @@
 #!/usr/bin/env ruby
 
 require "outlaw"
-load ".outlawed"
+if File.exists?(Dir.pwd + '/.outlawed')
+  load Dir.pwd + "/.outlawed"
+elsif File.exists?(Dir.home + '/.outlawed')
+  load Dir.home + '/.outlawed'
+else
+  puts "
+  ***NOTICE:***
+  Using example .outlawed file, which can be copied and customized from
+  #{File.dirname(File.dirname(`gem which outlaw`.chop)) + '/examples/.outlawed.example'}\n
+  place .outlawed file in project directory and/or home directories, outlaw looks
+  at pwd first for ./outlawed and then at ~/.outlawed and defaults to example
+  if neither is found\n\n"
+
+  load File.dirname(File.dirname(`gem which outlaw`.chop)) + '/examples/.outlawed.example'
+end
 
 puts Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")
