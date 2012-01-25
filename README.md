@@ -46,3 +46,7 @@ outlaw ":conditional_branch
         :disjoint_code_seperator
         else",
         "If you write unless else and think it makes sense than you are a cylon"
+
+Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
+detections they provide can be added as laws in the outlawed file while
+ignoring/not running other detection routines.
