@@ -3,7 +3,7 @@
 ##Keep bad code out of your projects.  Your idea of bad code, no one elses.
 
 ### Part of MendicantUniversity.org S10 class, personal project.
-From the included outlawed.rb example file for custom rule definition:
+From the included .outlawed.example file for custom rule definition:
 
     module Outlaw
       outlaw "@@",                "Class variables are evil"
@@ -12,7 +12,9 @@ From the included outlawed.rb example file for custom rule definition:
       outlaw "eval",              "never eval, rarely class_eval or instance_eval, but never eval"
     end
 
-### Proposed syntax for DSL:
+Before using outlaw in a project you must create (or copy the example) .outlawed file which Outlaw will read laws from.
+
+### Syntax for DSL:
 
   A defined collection exists for core classes, such that
 
@@ -22,14 +24,19 @@ From the included outlawed.rb example file for custom rule definition:
   will outlaw subclassing from any core class
 
 
- Users can extend new defined collections and by creating new constants
-defined as arrays of variable names to match in example code the same
-way :core_class is used above
+Users can create defined collections like :core_class by creating new constants 
+called, e.g. CORE_CLASS within the "module Outlaw" namespace which are
+defined as arrays of string names to match in example code the same
+way :core_class is used above.
 
-Disjoin code segments can be provided as a single example (assuming they
-occur in the same file) by inserting a :disjoint_code_seperator token in
-the outlawed sample definition.  I don't have a good use case for this
-at present though, and since it will be difficult to handle disjoint
-code across different files this may not be worthwhile...  but similar
-special case symbol meanings may be useful, and suggestions or examples
-are welcome. 
+###Planned features (unimplemented):
+specify AST-nodes of interest, and within them allow arbitrary amounts of code with
+a :disjoint_code_seperator token.
+
+This should allow, for instance, something like the following, which is not currently possible to outlaw in a useful way:
+
+outlaw ":conditional_branch
+        unless
+        :disjoint_code_seperator
+        else",
+        "If you write unless else and think it makes sense than you are a cylon"
