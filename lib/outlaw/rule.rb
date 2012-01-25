@@ -1,7 +1,6 @@
 module Outlaw
   class Rule
     NoDetectionBlockProvided = Class.new(StandardError)
-    UnhandledParse = Class.new(StandardError)
     attr_reader :message, :restriction
     def initialize(message, restriction, &detection_block)
       raise NoDetectionBlockProvided unless detection_block
@@ -41,7 +40,7 @@ module Outlaw
         when Regexp
           match = true if code.match(part)
         when Symbol
-          raise UnhandledParse unless param_type_equal(token_type(code), part)
+          return false unless param_type_equal(token_type(code), part)
           #check count on first and count down subseq matches
           if parameter.first.nil? #history of parameter match if any
             parameter[0] = code
