@@ -7,9 +7,11 @@ module Outlaw
         tokens.each do |token|
           case
           when special_case?(token)
-            next #TODO
-          when multipart?(token)                  #this jewel is for Const.new and similar stuff
-            parsed_restriction += Ripper.lex(token).reduce([]){|a, t| a << /#{t[2]}/}
+            next #TODO - handle AST branches/disjoint code/meta-symbols to be defined
+          when multipart?(token)  #this handles multi-token literals, Const.new etc
+            parsed_restriction += Ripper.lex(token)
+                                        .reduce([]){|array, tkn|
+                                        array << token_type_regex(tkn) }
           when defined_collection?(token)
             parsed_restriction << Outlaw.const_get(string_to_sym(token.upcase))
           when parameter?(token)
@@ -22,6 +24,10 @@ module Outlaw
       end
 
       private
+
+      def token_type_regex(token)
+        /#{token[2]}/
+      end
 
       def parameter?(token)
         token[0].chr == ':'
