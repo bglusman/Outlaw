@@ -2,6 +2,8 @@
 
 ##Keep bad code out of your projects.  Your idea of bad code, no one elses.
 
+###NOTE: Outlaw can evaluate any version ruby code, *BUT* it runs on only 1.9 -- set your system ruby to 1.9 to use
+
 ### Part of MendicantUniversity.org S10 class, personal project.
 From the included .outlawed.example file for custom rule definition:
 
@@ -10,8 +12,13 @@ From the included .outlawed.example file for custom rule definition:
       outlaw "module :token end", "nest modules to avoid empty module declarations"
       outlaw "eval",              "never eval, rarely class_eval or instance_eval, but never eval"
 
+Execute outlaw on your project from the root directory by simply entering "outlaw", or specify another directory to run
+on with "outlaw /path/to/dir"
 
-Before using outlaw in a project you must create (or copy the example) .outlawed file which Outlaw will read laws from.
+Before using outlaw in a project you should create a .outlawed file which Outlaw will read laws from.
+It comes with an example file (.outlawed.example) which is included in the gem and will be loaded if no .outlawed
+file is found in current directory or home directory, and will warn you to provide a real file (and provide location
+of the sample file in your system from the gem installation).
 
 ### Syntax for DSL:
 
