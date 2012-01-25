@@ -1,6 +1,7 @@
 module Outlaw
   class Rule
     NoDetectionBlockProvided = Class.new(StandardError)
+    UnhandledParse = Class.new(StandardError)
     attr_reader :message, :restriction
     def initialize(message, restriction, &detection_block)
       raise NoDetectionBlockProvided unless detection_block
@@ -34,17 +35,17 @@ module Outlaw
       private
 
       def match_token?(code, part, parameter)
-        #RegEx responds to .source but not .to_sym, symbols vice versa.
-        #Is this really better than checking is_type_of? Smells since not using methods
-        if (part.respond_to?(:to_a)   && part.include?(code))
-          match = true
-        elsif (part.respond_to?(:source) && code.match(part))
-          match = true
-        elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
+        case part
+        when Array
+          match = true if part.include?(code)
+        when Regexp
+          match = true if code.match(part)
+        when Symbol
+          raise UnhandledParse unless param_type_equal(token_type(code), part)
           #check count on first and count down subseq matches
           if parameter.first.nil? #history of parameter match if any
             parameter[0] = code
-            parameter[1] -= 1  #first occurrence of parameter
+            parameter[1] -= 1     #first occurrence of parameter
             match = true
           else
             if parameter.first == code
