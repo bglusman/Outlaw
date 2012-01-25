@@ -50,3 +50,6 @@ outlaw ":conditional_branch
 Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
 detections they provide can be added as laws in the outlawed file while
 ignoring/not running other detection routines.
+
+Provide hooks to integrate with rake task and/or githooks to automate
+enforcement/notification of laws in a project.
