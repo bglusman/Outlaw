@@ -2,12 +2,10 @@ module Outlaw
   class Rule
     NoDetectionBlockProvided = Class.new(StandardError)
     attr_reader :message, :restriction
-    def initialize(message, restriction, type=:ruby, scope=:file, &detection_block)
+    def initialize(message, restriction, &detection_block)
       raise NoDetectionBlockProvided unless detection_block
       @message          = message
       @restriction      = restriction
-      @type             = type
-      @scope            = scope
       @detection_block  = detection_block
     end
 
@@ -24,37 +22,45 @@ module Outlaw
           part = pattern[pattern_index]
 
           next if IGNORE_TYPES.include? token_type(code)
-
-          #RegEx responds to .source but not .to_sym, symbols vice versa.
-          #Is this really better than checking is_type_of? Smells since not using methods
-          if (part.respond_to?(:to_a)   && part.include?(code))
-            pattern_index += 1
-          elsif (part.respond_to?(:source) && code.match(part))
-            pattern_index += 1
-          elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
-            #check count on first and count down subseq matches
-            if params[part].first.nil?
-              params[part][0] = code
-              params[part][1] -= 1
-              pattern_index += 1
-            else
-              if params[part].first == code
-                params[part][1] -= 1
-                pattern_index += 1
-              else
-                return false
-              end
-            end
-          else
-            return false
-          end
+          return false unless match_token?(code, part, params[part])
+          pattern_index +=1
           return true if pattern_index >= pattern.length
-        end   #we got to the end of pattern, so it was matched
+        end
+
         return false
-        # got to end of program without end of pattern
+        # got to end of program without completing pattern
       end
 
       private
+
+      def match_token?(code, part, parameter)
+        #RegEx responds to .source but not .to_sym, symbols vice versa.
+        #Is this really better than checking is_type_of? Smells since not using methods
+        if (part.respond_to?(:to_a)   && part.include?(code))
+          match = true
+        elsif (part.respond_to?(:source) && code.match(part))
+          match = true
+        elsif (part.respond_to?(:to_sym) && param_type_equal(token_type(code), part))
+          #check count on first and count down subseq matches
+          if parameter.first.nil? #history of parameter match if any
+            parameter[0] = code
+            parameter[1] -= 1  #first occurrence of parameter
+            match = true
+          else
+            if parameter.first == code
+              parameter[1] -= 1
+              match = true
+            else
+              match = false
+            end
+          end
+        else
+          match = false
+        end
+
+        match
+      end
+
 
       def param_type_equal(lex, param)
         #for now just check if it's a variable type, not kw, ws or other token
