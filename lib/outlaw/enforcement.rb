@@ -10,7 +10,7 @@ module Outlaw
       def process_directory(path)
         Dir.foreach(path) do |entry|
           next if entry == '.' or entry == '..'
-          if File.directory?(entry)
+          if File.directory?("#{path}/#{entry}")
             # Dir.open(path + entry)
             process_directory("#{path}/#{entry}")
           else
