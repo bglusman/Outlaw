@@ -30,13 +30,17 @@ of the sample file in your system from the gem installation).
   will outlaw subclassing from any core class
 
 
-Users can create defined collections like :core_class by creating new constants 
+Users can create defined collections like :core_class by creating new constants
 called, e.g. CORE_CLASS within the "module Outlaw" namespace which are
 defined as arrays of string names to match in example code the same
 way :core_class is used above.
 
 ###Planned features (unimplemented):
-specify AST-nodes of interest, and within them allow arbitrary amounts of code with
+*Customize sensitivty , for instance whitespace is currently ignored, but
+could enforce style conventions with some whitespace sensitive laws.
+Also ignores parens, which might be required or prohibited in some
+context.
+*Specify AST-nodes of interest, and within them allow arbitrary amounts of code with
 a :disjoint_code_seperator token.
 
 This should allow, for instance, something like the following, which is not currently possible to outlaw in a useful way:
@@ -45,11 +49,13 @@ outlaw ":conditional_branch
         unless
         :disjoint_code_seperator
         else",
-        "If you write unless else and think it makes sense than you are a cylon"
+        "If you write unless else and think it makes sense then you are a cylon"
 
-Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
+*Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
 detections they provide can be added as laws in the outlawed file while
 ignoring/not running other detection routines.
 
-Provide hooks to integrate with rake task and/or githooks to automate
+*Automate optional integration with rake task and/or githooks for
 enforcement/notification of laws in a project.
+
+*Specify classes of laws, such as log, warn and prevent for differing behavior regarding violations at runtime.
