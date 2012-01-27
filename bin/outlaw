@@ -2,9 +2,9 @@
 
 require "outlaw"
 if File.exists?(Dir.pwd + '/.outlawed')
-  load Dir.pwd + "/.outlawed"
+   File.open(Dir.pwd + "/.outlawed") {|f| Outlaw.module_eval(f.read)}
 elsif File.exists?(Dir.home + '/.outlawed')
-  load Dir.home + '/.outlawed'
+   File.open(Dir.home + '/.outlawed') {|f| Outlaw.module_eval(f.read)}
 else
   puts "
   ***NOTICE:***
@@ -14,7 +14,8 @@ else
   at pwd first for ./outlawed and then at ~/.outlawed and defaults to example
   if neither is found\n\n"
 
-  load File.dirname(File.dirname(`gem which outlaw`.chop)) + '/examples/.outlawed.example'
+   File.open(File.dirname(File.dirname(`gem which outlaw`.chop)) +
+      '/examples/.outlawed.example') {|f| Outlaw.module_eval(f.read)}
 end
 
 puts Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")

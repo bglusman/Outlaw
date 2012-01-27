@@ -6,8 +6,8 @@ module Outlaw
         parsed_restriction = []
         tokens.each do |token|
           case
-          when special_case?(token)
-            next #TODO - handle AST branches/disjoint code/meta-symbols to be defined
+          when special_case?(token) # notional plan for handling flexibly
+            parsed_restriction << string_to_sym(token).to_proc
           when multipart?(token)  #this handles multi-token literals, Const.new etc
             parsed_restriction += Ripper.lex(token)
                                         .reduce([]){|array, tkn|
