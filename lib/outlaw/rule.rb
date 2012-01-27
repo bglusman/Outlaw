@@ -17,14 +17,19 @@ module Outlaw
       def test(program, start_index, pattern)
         pattern_index = 0
         params = params_count_hash(pattern)
-        start_index.upto(program.length) do |index|
-          code = program[index]
-          part = pattern[pattern_index]
-
+        pattern_proc = proc {|index|
           next if IGNORE_TYPES.include? token_type(code)
           return false unless match_token?(code, part, params[part])
           pattern_index +=1
           return true if pattern_index >= pattern.length
+        }
+        default_proc = proc {|block| block.call }
+        start_index.upto(program.length) do |index|
+          code = program[index]
+          part = pattern[pattern_index]
+
+          part.kind_of?(Proc) ? (part.call(pattern_proc)) : (default_proc.call(pattern_proc))
+
         end
 
         return false
