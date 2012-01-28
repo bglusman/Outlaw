@@ -1,10 +1,10 @@
 module Outlaw
   class Enforcement
     class << self
-      attr_reader :laws
-      def add(law)
-        @laws ||= []
-        @laws << law
+      attr_reader :rules
+      def add(rule)
+        @rules ||= []
+        @rules << rule
       end
 
       def process_directory(path)
@@ -21,10 +21,10 @@ module Outlaw
       def handle(file)
         if file.match(/.rb$/)
           text = File.open(file) {|f| f.read}
-          laws.each do |law|
-            if law.call(text)
+          rules.each do |rule|
+            if rule.call(text)
               puts "Outlaw Violation in file: #{file}\nRestriction:"   +
-                   "#{law.restriction}\n\n#{law.message}"
+                   "#{rule.restriction}\n\n#{rule.message}"
             end
           end
         end

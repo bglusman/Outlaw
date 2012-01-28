@@ -12,13 +12,13 @@ The current version of outlaw takes a user provided configuration file
 directory) and parses a series of method calls to the outlaw method (defined
 within the Outlaw module namespace, but module_eval'd so you don't need to
 namespace the file).  You can also define constants in your .outlawed file as
-collections of strings for use in your laws, but that will be addressed below.
+collections of strings for use in your rules, but that will be addressed below.
 
 Each call to the outlaw method consists of two string arguments, the first an
 anti-pattern you wish to prohibit usage of in one or more projects, and the
 second an explanation to be provided when the anti-pattern is detected.
 
-### Syntax for law creation:
+### Syntax for rule creation:
 
 Some examples are include in the .outlawed.example file for reference:
 
@@ -57,14 +57,14 @@ are independent, but if there is interest special handling could be added to
 also match specific instances of a collection much like the symbol handling.
 
 Outlaw currently ignores whitespace, parentheses and new lines, though I have
-ideas to change this behavior dynamically in certain laws if desired.
+ideas to change this behavior dynamically in certain rules if desired.
 
 Execute outlaw on your project from the root directory by simply entering
 "outlaw" into your shell, or specify another directory to run
 on with "outlaw /path/to/dir"
 
 Before using outlaw in a project you should create a .outlawed file which
-Outlaw will read laws from.
+Outlaw will read rules from.
 
 It comes with an example file (.outlawed.example) which is included in the
 gem and will be loaded if no .outlawed file is found in current directory or
@@ -73,7 +73,7 @@ location of the sample file in your system from the gem installation).
 
 ###Planned features (unimplemented):
 *Customize sensitivty , for instance whitespace is currently ignored, but
-could enforce style conventions with some whitespace sensitive laws.
+could enforce style conventions with some whitespace sensitive rules.
 Also ignores parens, which might be required or prohibited in some
 context.
 *Specify AST-nodes of interest, and within them allow arbitrary amounts of
@@ -90,10 +90,10 @@ currently possible to outlaw in a useful way:
         cylon"
 
 *Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
-detections they provide can be added as laws in the outlawed file while
+detections they provide can be added as rules in the outlawed file while
 ignoring/not running other detection routines.
 
 *Automate optional integration with rake task and/or githooks for
-enforcement/notification of laws in a project.
+enforcement/notification of rules in a project.
 
-*Specify classes of laws, such as log, warn and prevent for differing behavior regarding violations at runtime.
+*Specify classes of rules, such as log, warn and prevent for differing behavior regarding violations at runtime.
