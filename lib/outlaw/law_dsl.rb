@@ -31,10 +31,6 @@ module Outlaw
         token[0].chr == ':'
       end
 
-      def special_case?(token)
-        SPECIAL_CASES.include? token
-      end
-
       def defined_collection?(token)
         parameter?(token) && Outlaw.const_defined?(string_to_sym(token.upcase))
       end
