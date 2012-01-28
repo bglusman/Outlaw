@@ -1,5 +1,5 @@
 require 'ripper'
-require_relative 'outlaw/law_dsl'
+require_relative 'outlaw/law_parser'
 require_relative 'outlaw/enforcement'
 require_relative 'outlaw/rule'
 
@@ -7,7 +7,7 @@ require_relative 'outlaw/rule'
 
 module Outlaw
   def self.outlaw(restriction, message)
-    law = Outlaw::LawDSL.parse(restriction, message)
+    law = Outlaw::LawParser.parse(restriction, message)
     Outlaw::Enforcement.add(law)
   end
 

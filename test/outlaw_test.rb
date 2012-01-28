@@ -1,7 +1,7 @@
 require_relative 'test_helper'
 
 module Outlaw
-  describe LawDSL do
+  describe LawParser do
     it "returns a Rule which is called on code and returns true or false" do
   end
 
@@ -26,7 +26,7 @@ CODE
 
     it "correctly builds rule for class var" do
       code1 = "@@"
-      rule1 = LawDSL.parse(code1)
+      rule1 = LawParser.parse(code1)
 
       class_var_file = <<CODE
   def badthing(here)
@@ -41,7 +41,7 @@ CODE
 
     it "correctly builds rule for protected" do
       code2 = "protected"
-      rule2 = LawDSL.parse(code2)
+      rule2 = LawParser.parse(code2)
 
     protected_file = <<CODE
 class Whatever
@@ -62,7 +62,7 @@ CODE
 
     it "correctly builds rule for eval" do
       code3 = "eval"
-      rule3 = LawDSL.parse(code3)
+      rule3 = LawParser.parse(code3)
 
     eval_file = <<CODE
   def not_really
@@ -80,7 +80,7 @@ CODE
 
     it "correctly builds rule for module" do
       code4 = "module :name end"
-      rule4 = LawDSL.parse(code4)
+      rule4 = LawParser.parse(code4)
 
       module_file = <<CODE
 module Thing
@@ -96,7 +96,7 @@ CODE
 
     it "correctly builds rule for core" do
       code5 = "class :symbol < :core_class"
-      rule5 = LawDSL.parse(code5)
+      rule5 = LawParser.parse(code5)
 
 core_file = <<CODE
 class Whatever < String
@@ -116,7 +116,7 @@ CODE
 #       code6 = "unless :symbols
 #               :disjoint_code_seperator
 #               else :more_symbols"
-#       rule6 = LawDSL.parse(code6)
+#       rule6 = LawParser.parse(code6)
 
 # core_file = <<CODE
 # class Whatever < String
@@ -128,7 +128,7 @@ CODE
 
     it "correctly builds rule for rescue nil" do
       code7 = "rescue nil"
-      rule7 = LawDSL.parse(code7)
+      rule7 = LawParser.parse(code7)
 
 nil_file = <<CODE
 begin
@@ -145,7 +145,7 @@ CODE
 
     it "correctly builds rule for inherit struct.new" do
       code8 = "class :symbol < Struct.new"
-      rule8 = LawDSL.parse(code8)
+      rule8 = LawParser.parse(code8)
 
       struct_file = <<CODE
 class MyClass < Struct.new("Customer", :name, :address)
@@ -174,7 +174,7 @@ CODE
     end
 
     it "returns a block from build_block method" do
-      block = LawDSL.send(:build_block,"@@")
+      block = LawParser.send(:build_block,"@@")
       assert_kind_of Proc, block
     end
   end

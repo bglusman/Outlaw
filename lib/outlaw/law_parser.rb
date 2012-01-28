@@ -1,5 +1,5 @@
 module Outlaw
-  module LawDSL
+  module LawParser
     class << self
       def parse(restriction, message="")
         tokens = restriction.split
