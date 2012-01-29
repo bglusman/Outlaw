@@ -6,19 +6,19 @@ module Outlaw
   end
 
   before do
-        @okay_file = <<CODE
-class Whatever < Set
-  def okaything(here)
-    @here = here
-  end
-end
+        @okay_file = %{
+          class Whatever < Set
+            def okaything(here)
+              @here = here
+            end
+          end
 
-module WithContent
-  def sumthin
-    class_eval('1 + 1')
-  end
-end
-CODE
+          module WithContent
+            def sumthin
+              class_eval('1 + 1')
+            end
+          end
+        }
 
   end
 
@@ -28,11 +28,11 @@ CODE
       code1 = "@@"
       rule1 = LawParser.parse(code1)
 
-      class_var_file = <<CODE
-  def badthing(here)
-    @@here = here
-  end
-CODE
+      class_var_file = %{
+        def badthing(here)
+          @@here = here
+        end
+      }
 
       class_result    = rule1.call(class_var_file)
       result1a        = rule1.call(@okay_file)
@@ -43,14 +43,14 @@ CODE
       code2 = "protected"
       rule2 = LawParser.parse(code2)
 
-    protected_file = <<CODE
-class Whatever
-  protected
-  def not_really
-    :false
-  end
-end
-CODE
+    protected_file = %{
+      class Whatever
+        protected
+        def not_really
+          :false
+        end
+      end
+    }
 
       protected_result= rule2.call(protected_file)
       result2a = rule2.call(@okay_file)
@@ -64,11 +64,11 @@ CODE
       code3 = "eval"
       rule3 = LawParser.parse(code3)
 
-    eval_file = <<CODE
-  def not_really
-    eval('1 + 1')
-  end
-CODE
+    eval_file = %{
+      def not_really
+        eval('1 + 1')
+      end
+    }
 
       eval_result = rule3.call(eval_file)
       result3a    = rule3.call(@okay_file)
@@ -82,10 +82,10 @@ CODE
       code4 = "module :name end"
       rule4 = LawParser.parse(code4)
 
-      module_file = <<CODE
-module Thing
-end
-CODE
+      module_file = %{
+        module Thing
+        end
+      }
 
       module_result   = rule4.call(module_file)
       result4a        = rule4.call(@okay_file)
@@ -98,45 +98,30 @@ CODE
       code5 = "class :symbol < :core_class"
       rule5 = LawParser.parse(code5)
 
-core_file = <<CODE
-class Whatever < String
-  def badthing(here)
-    @here = here
-  end
-end
-CODE
+      core_file = %{
+        class Whatever < String
+          def badthing(here)
+            @here = here
+          end
+        end
+      }
       core_result     = rule5.call(core_file)
       result5a        = rule5.call(@okay_file)
       core_result     .must_equal true
       result5a.must_equal false
     end
 
-
-#     it "correctly builds rule for unless else" do
-#       code6 = "unless :symbols
-#               :disjoint_code_seperator
-#               else :more_symbols"
-#       rule6 = LawParser.parse(code6)
-
-# core_file = <<CODE
-# class Whatever < String
-#   def badthing(here)
-#     @here = here
-#   end
-# end
-# CODE
-
     it "correctly builds rule for rescue nil" do
       code7 = "rescue nil"
       rule7 = LawParser.parse(code7)
 
-nil_file = <<CODE
-begin
-  "hi"
-rescue nil
-  "bye"
-end
-CODE
+      nil_file = %{
+        begin
+          "hi"
+        rescue nil
+          "bye"
+        end
+      }
       nil_result     = rule7.call(nil_file)
       result7a       = rule7.call(@okay_file)
       nil_result     .must_equal true
@@ -147,9 +132,9 @@ CODE
       code8 = "class :symbol < Struct.new"
       rule8 = LawParser.parse(code8)
 
-      struct_file = <<CODE
-class MyClass < Struct.new("Customer", :name, :address)
-CODE
+      struct_file = %{
+        class MyClass < Struct.new("Customer", :name, :address)
+      }
 
       struct_result   = rule8.call(struct_file)
       result8a        = rule8.call(@okay_file)
