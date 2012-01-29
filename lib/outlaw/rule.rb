@@ -1,6 +1,5 @@
 module Outlaw
   class Rule
-    NoDetectionBlockProvided = Class.new(StandardError)
     attr_reader :message, :pattern, :detection_block
     def initialize(pattern, message=nil, &detection_block)
       @pattern          = pattern
