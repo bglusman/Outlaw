@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require "outlaw"
+require_relative "../lib/outlaw"
 if File.exists?(Dir.pwd + '/.outlawed')
    File.open(Dir.pwd + "/.outlawed") {|f| Outlaw.module_eval(f.read)}
 elsif File.exists?(Dir.home + '/.outlawed')

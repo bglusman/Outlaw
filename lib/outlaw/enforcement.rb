@@ -24,7 +24,7 @@ module Outlaw
           rules.each do |rule|
             if rule.violation?(text)
               puts "Outlaw Violation in file: #{file}\nRestriction:"   +
-                   "#{rule.restriction}\n\n#{rule.message}"
+                   "#{rule.message}\n\n"
             end
           end
         end
