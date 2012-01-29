@@ -19,7 +19,6 @@ module Outlaw
             end
           end
         }
-
   end
 
 
@@ -141,15 +140,6 @@ module Outlaw
 
       struct_result.must_equal true
       result8a.must_equal false
-    end
-
-
-#     end
-
-    it "returns a hash with key counts and nil placeholders" do
-      params = Rule.send(:params_count_hash, [/module/, :token1, :token2, :token1, /class/, :token3, /end/])
-      params.keys.size.must_equal 3
-      params[:token1].last.must_equal 2
     end
 
     it "returns a hash with key counts and nil placeholders" do
