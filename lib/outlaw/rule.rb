@@ -10,7 +10,8 @@ module Outlaw
 
     def violation?(code)
       if detection_block.nil?
-        LawParser.parse(pattern).call(code)
+        @detection_block = LawParser.parse(pattern)
+        detection_block.call(code)
       else
         detection_block.call(code)
       end
