@@ -25,7 +25,7 @@ module Outlaw
 
     it "correctly builds rule for class var" do
       code1 = "@@"
-      rule1 = LawParser.parse(code1)
+      rule1 = Rule.new(code1)
 
       class_var_file = %{
         def badthing(here)
@@ -40,7 +40,7 @@ module Outlaw
 
     it "correctly builds rule for protected" do
       code2 = "protected"
-      rule2 = LawParser.parse(code2)
+      rule2 = Rule.new(code2)
 
     protected_file = %{
       class Whatever
@@ -61,7 +61,7 @@ module Outlaw
 
     it "correctly builds rule for eval" do
       code3 = "eval"
-      rule3 = LawParser.parse(code3)
+      rule3 = Rule.new(code3)
 
     eval_file = %{
       def not_really
@@ -79,7 +79,7 @@ module Outlaw
 
     it "correctly builds rule for module" do
       code4 = "module :name end"
-      rule4 = LawParser.parse(code4)
+      rule4 = Rule.new(code4)
 
       module_file = %{
         module Thing
@@ -95,7 +95,7 @@ module Outlaw
 
     it "correctly builds rule for core" do
       code5 = "class :symbol < :core_class"
-      rule5 = LawParser.parse(code5)
+      rule5 = Rule.new(code5)
 
       core_file = %{
         class Whatever < String
@@ -112,7 +112,7 @@ module Outlaw
 
     it "correctly builds rule for rescue nil" do
       code7 = "rescue nil"
-      rule7 = LawParser.parse(code7)
+      rule7 = Rule.new(code7)
 
       nil_file = %{
         begin
@@ -129,7 +129,7 @@ module Outlaw
 
     it "correctly builds rule for inherit struct.new" do
       code8 = "class :symbol < Struct.new"
-      rule8 = LawParser.parse(code8)
+      rule8 = Rule.new(code8)
 
       struct_file = %{
         class MyClass < Struct.new("Customer", :name, :address)

@@ -6,8 +6,8 @@ require_relative 'outlaw/rule'
 
 
 module Outlaw
-  def self.outlaw(restriction, message)
-    rule = Outlaw::LawParser.parse(restriction, message)
+  def self.outlaw(pattern, message)
+    rule = Rule.new(pattern, message)
     Outlaw::Enforcement.add(rule)
   end
 

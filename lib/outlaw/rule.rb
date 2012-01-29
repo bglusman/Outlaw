@@ -1,16 +1,19 @@
 module Outlaw
   class Rule
     NoDetectionBlockProvided = Class.new(StandardError)
-    attr_reader :message, :restriction
-    def initialize(message, restriction, &detection_block)
-      raise NoDetectionBlockProvided unless detection_block
-      @message          = message
-      @restriction      = restriction
+    attr_reader :message, :pattern, :detection_block
+    def initialize(pattern, message=nil, &detection_block)
+      @pattern          = pattern
+      @message          = message ? message : "Don't do this: #{pattern}"
       @detection_block  = detection_block
     end
 
     def violation?(code)
-      @detection_block.call(code)
+      if detection_block.nil?
+        LawParser.parse(pattern).call(code)
+      else
+        detection_block.call(code)
+      end
     end
 
     class << self

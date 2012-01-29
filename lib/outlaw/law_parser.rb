@@ -1,7 +1,7 @@
 module Outlaw
   module LawParser
     extend self
-    def parse(restriction, message="")
+    def parse(restriction)
       tokens = restriction.split
       parsed_restriction = []
       tokens.each do |token|
@@ -18,7 +18,7 @@ module Outlaw
           parsed_restriction += build_regex(token)
         end
       end
-      Rule.new(message, restriction, &build_block(parsed_restriction))
+       build_block(parsed_restriction)
     end
 
     private
