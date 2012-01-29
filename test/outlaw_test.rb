@@ -2,7 +2,7 @@ require_relative 'test_helper'
 
 module Outlaw
   describe LawParser do
-    it "returns a Rule which is called on code and returns true or false" do
+    it "returns a Rule which is violation?ed on code and returns true or false" do
   end
 
   before do
@@ -34,8 +34,8 @@ module Outlaw
         end
       }
 
-      class_result    = rule1.call(class_var_file)
-      result1a        = rule1.call(@okay_file)
+      class_result    = rule1.violation?(class_var_file)
+      result1a        = rule1.violation?(@okay_file)
       class_result    .must_equal true
     end
 
@@ -52,8 +52,8 @@ module Outlaw
       end
     }
 
-      protected_result= rule2.call(protected_file)
-      result2a = rule2.call(@okay_file)
+      protected_result= rule2.violation?(protected_file)
+      result2a = rule2.violation?(@okay_file)
 
       protected_result.must_equal true
       result2a        .must_equal false
@@ -70,8 +70,8 @@ module Outlaw
       end
     }
 
-      eval_result = rule3.call(eval_file)
-      result3a    = rule3.call(@okay_file)
+      eval_result = rule3.violation?(eval_file)
+      result3a    = rule3.violation?(@okay_file)
 
       eval_result.must_equal true
       result3a.must_equal false
@@ -87,8 +87,8 @@ module Outlaw
         end
       }
 
-      module_result   = rule4.call(module_file)
-      result4a        = rule4.call(@okay_file)
+      module_result   = rule4.violation?(module_file)
+      result4a        = rule4.violation?(@okay_file)
 
       module_result.must_equal true
       result4a.must_equal false
@@ -105,8 +105,8 @@ module Outlaw
           end
         end
       }
-      core_result     = rule5.call(core_file)
-      result5a        = rule5.call(@okay_file)
+      core_result     = rule5.violation?(core_file)
+      result5a        = rule5.violation?(@okay_file)
       core_result     .must_equal true
       result5a.must_equal false
     end
@@ -122,8 +122,8 @@ module Outlaw
           "bye"
         end
       }
-      nil_result     = rule7.call(nil_file)
-      result7a       = rule7.call(@okay_file)
+      nil_result     = rule7.violation?(nil_file)
+      result7a       = rule7.violation?(@okay_file)
       nil_result     .must_equal true
       result7a.must_equal false
     end
@@ -136,8 +136,8 @@ module Outlaw
         class MyClass < Struct.new("Customer", :name, :address)
       }
 
-      struct_result   = rule8.call(struct_file)
-      result8a        = rule8.call(@okay_file)
+      struct_result   = rule8.violation?(struct_file)
+      result8a        = rule8.violation?(@okay_file)
 
       struct_result.must_equal true
       result8a.must_equal false

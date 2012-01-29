@@ -22,7 +22,7 @@ module Outlaw
         if file.match(/.rb$/)
           text = File.open(file) {|f| f.read}
           rules.each do |rule|
-            if rule.call(text)
+            if rule.violation?(text)
               puts "Outlaw Violation in file: #{file}\nRestriction:"   +
                    "#{rule.restriction}\n\n#{rule.message}"
             end

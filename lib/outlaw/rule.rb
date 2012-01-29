@@ -9,7 +9,7 @@ module Outlaw
       @detection_block  = detection_block
     end
 
-    def call(code)
+    def violation?(code)
       @detection_block.call(code)
     end
 
