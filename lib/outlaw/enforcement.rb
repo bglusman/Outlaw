@@ -23,8 +23,8 @@ module Outlaw
           text = File.open(file) {|f| f.read}
           rules.each do |rule|
             if rule.violation?(text)
-              puts "Outlaw Violation in file: #{file}\nRestriction:"   +
-                   "#{rule.message}\n\n"
+              puts "Outlaw Violation in file: #{file}\nRestriction:\n"   +
+                   "#{rule.pattern}\n#{rule.message}\n\n"
             end
           end
         end
