@@ -24,6 +24,11 @@ module Outlaw
 
     def apply_modifications(restore=nil)
       return nil if restore.nil?
+      defaults = Outlaw.ignore_types
+      Outlaw.ignore_types.delete(WHITESPACE) if modifications
+                                                .include?(:whitespace_sensitive)
+      Outlaw.ignore_types = restore if restore
+      defaults
     end
 
 

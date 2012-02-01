@@ -19,6 +19,7 @@ module Outlaw
   end
   PARAM_TYPES       = [:on_const, :on_ident, :on_ivar, :on_cvar]
   self.ignore_types = [:on_sp, :on_nl, :on_ignored_nl, :on_rparen, :on_lparen]
+  WHITESPACE        = [:on_sp, :on_nl, :on_ignored_nl]
   SPECIAL_CASES     = [:whitespace_sensitive]
   #these come from ripper's Lexer
   CORE_CLASSES_FILE = File.expand_path("../../data/core_classes.txt", __FILE__)

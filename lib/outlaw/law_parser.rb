@@ -26,7 +26,8 @@ module Outlaw
     private
 
     def handle_special(token, rule)
-      rule.modifications = token
+      rule.modifications ||= []
+      rule.modifications << token
     end
 
     def special_case?(token)
