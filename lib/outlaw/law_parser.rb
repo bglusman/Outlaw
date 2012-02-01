@@ -1,11 +1,13 @@
 module Outlaw
   module LawParser
     extend self
-    def parse(restriction)
+    def parse(restriction, rule)
       tokens = restriction.split
       parsed_restriction = []
       tokens.each do |token|
         case
+        when special_case?(token)
+          handle_special(token, rule)
         when multipart?(token)  #this handles multi-token literals, Const.new etc
           parsed_restriction += Ripper.lex(token)
                                       .reduce([]){|array, tkn|
@@ -22,6 +24,14 @@ module Outlaw
     end
 
     private
+
+    def handle_special(token, rule)
+      rule.modifications = token
+    end
+
+    def special_case?(token)
+      SPECIAL_CASES.include?(token)
+    end
 
     def token_type_regex(token)
       /#{token[2]}/

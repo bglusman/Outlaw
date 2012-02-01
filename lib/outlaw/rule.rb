@@ -1,6 +1,7 @@
 module Outlaw
   class Rule
     attr_reader :message, :pattern, :detection_block
+    attr_accessor :modifications
     def initialize(pattern, message=nil, &detection_block)
       @pattern          = pattern
       @message          = message ? message : "Don't do this: #{pattern}"
@@ -8,13 +9,25 @@ module Outlaw
     end
 
     def violation?(code)
-      if detection_block.nil?
-        @detection_block = LawParser.parse(pattern)
-        detection_block.call(code)
-      else
-        detection_block.call(code)
-      end
+      @detection_block = LawParser.parse(pattern, self) if detection_block.nil?
+      detect_violation(code)
     end
+
+    private
+
+    def detect_violation(code)
+      defaults = apply_modifications
+      result = detection_block.call(code)
+      apply_modifications(defaults)
+      result
+    end
+
+    def apply_modifications(restore=nil)
+      return nil if restore.nil?
+    end
+
+
+
 
     class << self
       def test(program, start_index, pattern)
@@ -24,7 +37,7 @@ module Outlaw
           code = program[index]
           part = pattern[pattern_index]
 
-          next if IGNORE_TYPES.include? token_type(code)
+          next if Outlaw.ignore_types.include? token_type(code)
           return false unless match_token?(code, part, params[part])
           pattern_index +=1
           return true if pattern_index >= pattern.length
