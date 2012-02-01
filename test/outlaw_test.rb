@@ -2,7 +2,7 @@ require_relative 'test_helper'
 
 module Outlaw
   describe LawParser do
-    it "returns a Rule which is violation?ed on code and returns true or false" do
+    it "returns a Rule which is called on code and returns true or false" do
   end
 
   before do
@@ -16,6 +16,9 @@ module Outlaw
           module WithContent
             def sumthin
               class_eval('1 + 1')
+            end
+
+            def okishthing
             end
           end
         }
@@ -140,6 +143,28 @@ module Outlaw
 
       struct_result.must_equal true
       result8a.must_equal false
+    end
+
+    it "correctly builds whitespace sensitive rule" do
+      code9 = ":vertical_whitespace_sensitive end\ndef"
+      rule9 = Rule.new(code9)
+
+      def_file = %{
+      class Mine
+        def method
+          true
+        end
+        def method2
+          false
+        end
+      end
+      }
+
+      def_result    = rule9.violation?(def_file)
+      result9a      = rule9.violation?(@okay_file)
+
+      def_result.must_equal true
+      result9a.must_equal false
     end
 
     it "returns a hash with key counts and nil placeholders" do

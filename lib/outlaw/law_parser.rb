@@ -6,7 +6,7 @@ module Outlaw
       parsed_restriction = []
       tokens.each do |token|
         case
-        when special_case?(token)
+        when special_case?(string_to_sym(token))
           handle_special(token, rule)
         when multipart?(token)  #this handles multi-token literals, Const.new etc
           parsed_restriction += Ripper.lex(token)
@@ -27,7 +27,7 @@ module Outlaw
 
     def handle_special(token, rule)
       rule.modifications ||= []
-      rule.modifications << token
+      rule.modifications << string_to_sym(token)
     end
 
     def special_case?(token)

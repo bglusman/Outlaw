@@ -23,16 +23,27 @@ module Outlaw
     end
 
     def apply_modifications(restore=nil)
-      return nil if restore.nil?
-      defaults = Outlaw.ignore_types
-      Outlaw.ignore_types.delete(WHITESPACE) if modifications
-                                                .include?(:whitespace_sensitive)
-      Outlaw.ignore_types = restore if restore
-      defaults
+      return nil if modifications.nil? && restore.nil?
+      default_ignores = Outlaw.ignore_types.clone
+      default_params  = Outlaw.param_types.clone
+      if modifications.include?(:whitespace_sensitive)
+        WHITESPACE.each do |ws|
+          Outlaw.ignore_types.delete(ws)
+          Outlaw.param_types << ws
+        end
+      end
+      if modifications.include?(:vertical_whitespace_sensitive)
+        VERTICAL_WHITESPACE.each do |ws|
+          Outlaw.ignore_types.delete(ws)
+          Outlaw.param_types << ws
+        end
+      end
+      Outlaw.ignore_types = restore.first if restore
+      Outlaw.param_types  = restore.last  if restore
+      [default_ignores, default_params]
     end
 
-
-
+    public
 
     class << self
       def test(program, start_index, pattern)
@@ -41,8 +52,8 @@ module Outlaw
         start_index.upto(program.length) do |index|
           code = program[index]
           part = pattern[pattern_index]
-
-          next if Outlaw.ignore_types.include? token_type(code)
+          return false if code.nil?
+          next if Outlaw.ignore_types.include?(token_type(code))
           return false unless match_token?(code, part, params[part])
           pattern_index +=1
           return true if pattern_index >= pattern.length
@@ -85,7 +96,7 @@ module Outlaw
 
       def param_type_equal(lex, param)
         #for now just check if it's a variable type, not kw, ws or other token
-        PARAM_TYPES.include? lex
+        Outlaw.param_types.include? lex
       end
 
       def token_type(code)
