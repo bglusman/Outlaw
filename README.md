@@ -20,7 +20,7 @@ second an explanation to be provided when the anti-pattern is detected.
 
 ### Syntax for rule creation:
 
-Some examples are include in the .outlawed.example file for reference:
+Some examples are included in the .outlawed.example file for reference:
 
       outlaw "@@",                          "Class variables are evil"
 
