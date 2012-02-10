@@ -36,6 +36,9 @@ Some examples are include in the .outlawed.example file for reference:
       outlaw "class :symbol < :core_class", "core classes implemented in c,
                                             can cause bad mojo"
 
+      outlaw :trailing_whitespace
+
+
 The first three examples are actual ruby keywords and features being outlawed
 and may not require much explanation except to indicate that they are detected
 via regular expression matches constructed from the strings, and attempt to use
@@ -55,6 +58,12 @@ values) and then reference CONST_NAME as :const_name in your outlaw anti-
 patterns as above.  Presently mutliple references to the same collection
 are independent, but if there is interest special handling could be added to
 also match specific instances of a collection much like the symbol handling.
+
+The last one is a custom rule that calls a method defined on the Outlaw
+module called 'trailing_whitespace' which returns a Rule object.  Any
+such new methods may be defined in the .outlawed file (since it is
+module_eval'd into the outlaw namespace) and then outawed the same way.
+
 
 Outlaw currently ignores whitespace, parentheses and new lines, though I have
 ideas to change this behavior dynamically in certain rules if desired.
