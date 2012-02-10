@@ -2,6 +2,7 @@ require 'ripper'
 require_relative 'outlaw/law_parser'
 require_relative 'outlaw/enforcement'
 require_relative 'outlaw/rule'
+require_relative 'outlaw/rule_methods'
 
 
 
@@ -9,9 +10,13 @@ module Outlaw
   extend self
   attr_accessor :ignore_types, :param_types
 
-  def outlaw(pattern, message)
-    rule = Rule.new(pattern, message)
-    Outlaw::Enforcement.add(rule)
+  def outlaw(pattern, message=nil)
+    if pattern.kind_of?(String)
+      rule = Rule.new(pattern, message)
+      Outlaw::Enforcement.add(rule)
+    else
+      Outlaw::Enforcement.add(self.send(pattern))
+    end
   end
 
   def enforce(dir=".")
