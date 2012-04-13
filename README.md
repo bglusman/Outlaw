@@ -81,28 +81,28 @@ home directory, and will warn you to provide a real file (and provide
 location of the sample file in your system from the gem installation).
 
 ###Planned features (unimplemented):
-*Customize sensitivty , for instance whitespace is currently ignored, but
+* Customize sensitivity, for instance whitespace is currently ignored, but
 could enforce style conventions with some whitespace sensitive rules.
 Also ignores parens, which might be required or prohibited in some
 context.
-*Specify AST-nodes of interest, and within them allow arbitrary amounts of
-code with a :disjoint_code_seperator token.
+*   Specify AST-nodes of interest, and within them allow arbitrary amounts of
+    code with a :disjoint_code_seperator token.
 
-This should allow, for instance, something like the following, which is not
-currently possible to outlaw in a useful way:
+    This should allow, for instance, something like the following, which is not
+    currently possible to outlaw in a useful way:
 
-    outlaw ":conditional_branch
-        unless
-        :disjoint_code_seperator
-        else",
-        "If you write unless else and think it makes sense then you are a
-        cylon"
+        outlaw ":conditional_branch
+            unless
+            :disjoint_code_seperator
+            else",
+            "If you write unless else and think it makes sense then you are a
+            cylon"
 
-*Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
+* Integrate Rails Best Practices gem, Reek gem, and perhaps others, so that individual issue
 detections they provide can be added as rules in the outlawed file while
 ignoring/not running other detection routines.
 
-*Automate optional integration with rake task and/or githooks for
+* Automate optional integration with rake task and/or githooks for
 enforcement/notification of rules in a project.
 
-*Specify classes of rules, such as log, warn and prevent for differing behavior regarding violations at runtime.
+* Specify classes of rules, such as log, warn and prevent for differing behavior regarding violations at runtime.
