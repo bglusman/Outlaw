@@ -3,6 +3,10 @@
 ##Keep bad code out of your projects.  Your idea of bad code, no one elses.
 ##Because good documentation should be executable.
 
+I'm proud to say Outlaw has been featured on [Ruby5](http://ruby5.envylabs.com/episodes/315-episode-311-october-5th-2012/stories/2751-thank-you-for-listening-to-ruby5#story-9) and [The Ruby Show](http://rubyshow.com/episodes/197)!  I also apoogize for the lack of updates, but I've been sporadically trying to interest other developers in helping to flesh out the use cases for rules they'd like to use in real projects, both ones that work with the existing gem and ones to help prioritize development of the rules engine going forward.
+
+Real world desires and use cases are currently my priority above the planned features below, and some additional plans for a git gem I hope to develop and use with Outlaw to facilitate installing git commit hooks for running outlaw on a project on each commit.  Even if you have no plans to contribute to the project directly, please fork and write up some example rules you'd like to see supported, or that you'd like to see adopted into the default rules that ship with outlaw, so I can get a better feel for how it can best serve the community.
+
 ###NOTE: Outlaw can evaluate any version ruby code, *BUT* it runs on only 1.9 -- set your system ruby to 1.9 to use
 
 ### Part of MendicantUniversity.org S10 class, personal project.
