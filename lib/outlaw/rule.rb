@@ -38,6 +38,7 @@ module Outlaw
           Outlaw.param_types << ws
         end
       end
+
       Outlaw.ignore_types = restore.first if restore
       Outlaw.param_types  = restore.last  if restore
       [default_ignores, default_params]
@@ -49,21 +50,54 @@ module Outlaw
       def test(program, start_index, pattern)
         pattern_index = 0
         params = params_count_hash(pattern)
-        start_index.upto(program.length) do |index|
+        index = start_index
+        while index < program.length do
           code = program[index]
           part = pattern[pattern_index]
           return false if code.nil?
-          next if Outlaw.ignore_types.include?(token_type(code))
+          (index += 1 && next) if Outlaw.ignore_types.include?(token_type(code))
+          if part.kind_of?(Proc)
+            return false unless part.call(pattern[pattern_index+1], program, index)
+            next                #^require all function cases must take these 3 arguments
+          end
           return false unless match_token?(code, part, params[part])
           pattern_index +=1
           return true if pattern_index >= pattern.length
+          index +=1
         end
 
         return false
         # got to end of program without completing pattern
       end
 
+      def disjoint_code_seperator(token, program, index)
+        while program[index] != token && !block_start_tokens.include?(program[index])
+          index += 1
+          return nil if index >= program.length
+        end
+        return true if program[index] == token
+        disjoint_code_seperator(end_token_for(program[index])) if block_start_tokens.include?(program[index])
+        return disjoint_code_seperator(token, program, index)
+      end
+
       private
+
+      def block_start_tokens
+        block_hash.keys
+      end
+
+      def end_token_for(key)
+        block_hash[key]
+      end
+
+      def block_hash
+        {
+          :on_lparen => :on_rparen,
+          :on_lbrace => :on_rbrace,
+          :on_lbracket=> :on_rbracket,
+          :on_kw =>     :on_kw,
+        }
+      end
 
       def match_token?(code, part, parameter)
         case part

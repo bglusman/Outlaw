@@ -7,7 +7,7 @@ module Outlaw
       tokens.each do |token|
         case
         when special_case?(string_to_sym(token))
-          handle_special(token, rule)
+          handle_special(token, rule, parsed_restriction)
         when multipart?(token)  #this handles multi-token literals, Const.new etc
           parsed_restriction += Ripper.lex(token)
                                       .reduce([]){|array, tkn|
@@ -25,9 +25,16 @@ module Outlaw
 
     private
 
-    def handle_special(token, rule)
-      rule.modifications ||= []
-      rule.modifications << string_to_sym(token)
+    def handle_special(token, rule, parsed_restriction)
+      case token
+      when *RULE_CASES
+        rule.modifications ||= []
+        rule.modifications << string_to_sym(token)
+      when *FUNCTION_CASES
+        parsed_restriction << lambda ->(*args) do
+          rule.send(token, *args) #actually required to take 3 arguments
+        end
+      end
     end
 
     def special_case?(token)
@@ -60,6 +67,7 @@ module Outlaw
     end
 
     def build_block(pattern)
+      raise "starting rule with special case not yet supported" if special_case?(pattern.first)
       ->(file) do
         program = Ripper.tokenize(file)
         program.each_with_index do |token, index|
