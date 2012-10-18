@@ -1,4 +1,5 @@
 require 'ripper'
+require 'pry'
 require_relative 'outlaw/law_parser'
 require_relative 'outlaw/enforcement'
 require_relative 'outlaw/rule'

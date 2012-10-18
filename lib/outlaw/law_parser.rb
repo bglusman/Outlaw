@@ -1,13 +1,14 @@
 module Outlaw
   module LawParser
     extend self
-    def parse(restriction, rule)
+    def parse(rule)
+      restriction = rule.pattern
       tokens = restriction.split
       parsed_restriction = []
       tokens.each do |token|
         case
         when special_case?(string_to_sym(token))
-          handle_special(token, rule, parsed_restriction)
+          handle_special(string_to_sym(token), rule, parsed_restriction)
         when multipart?(token)  #this handles multi-token literals, Const.new etc
           parsed_restriction += Ripper.lex(token)
                                       .reduce([]){|array, tkn|
@@ -29,11 +30,12 @@ module Outlaw
       case token
       when *RULE_CASES
         rule.modifications ||= []
-        rule.modifications << string_to_sym(token)
+        rule.modifications << token
       when *FUNCTION_CASES
-        parsed_restriction << lambda ->(*args) do
-          rule.send(token, *args) #actually required to take 3 arguments
-        end
+        parsed_restriction << ->(*args) {
+          target = args.shift
+          target.send(token, *args) #actually required to take self + 3 arguments
+        }
       end
     end
 
