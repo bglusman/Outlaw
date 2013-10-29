@@ -4,6 +4,7 @@ require_relative 'outlaw/law_parser'
 require_relative 'outlaw/enforcement'
 require_relative 'outlaw/rule'
 require_relative 'outlaw/rule_methods'
+require_relative 'outlaw/post_install'
 
 
 
@@ -23,6 +24,11 @@ module Outlaw
   def enforce(dir=".")
     Outlaw::Enforcement.process_directory(dir)
   end
+
+  def post_install(gem_installer)
+    PostInstall.new(gem_installer)
+  end
+
   #these come from ripper's Lexer
   self.param_types    = [:on_const, :on_ident, :on_ivar, :on_cvar]
   self.ignore_types   = [:on_sp, :on_nl, :on_ignored_nl, :on_rparen, :on_lparen]

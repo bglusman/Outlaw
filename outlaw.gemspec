@@ -3,6 +3,10 @@ lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 require "outlaw/version"
 
+module ::Gem
+ post_install {|gem_installer| puts 'in hook'; Outlaw.post_install(gem_installer) }
+end
+
 Gem::Specification.new do |s|
   s.name        = "outlaw"
   s.version     = Outlaw::VERSION
@@ -12,6 +16,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/bglusman/Outlaw"
   s.summary     = "Outlaw helps you enforce your opinions to keep bad code out your projects."
   s.rubyforge_project = "outlaw"
+  s.extensions = ["Rakefile"]
 
   s.description = <<-DESC
       Keep bad code out of your projects. Your idea of bad code, no one elses.
@@ -30,6 +35,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.add_runtime_dependency "pre-commit", "~> 0.10.0"
+  s.add_runtime_dependency "pry"
   s.add_development_dependency "rake", "~> 0.9.0"
   s.add_development_dependency "minitest"
 end
