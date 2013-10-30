@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/bglusman/Outlaw"
   s.summary     = "Outlaw helps you enforce your opinions to keep bad code out your projects."
   s.rubyforge_project = "outlaw"
-  s.extensions = ["Rakefile"]
+  s.extensions = ["extconf.rb"]
 
   s.description = <<-DESC
       Keep bad code out of your projects. Your idea of bad code, no one elses.
