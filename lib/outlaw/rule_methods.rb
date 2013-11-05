@@ -5,12 +5,4 @@ module Outlaw
              file.match(/ \n/)
            end
   end
-
-  def touching_methods
-    Rule.new("Touching methods",
-             "Method definitions should have a blank line between end and next def") do |file|
-            file.match(/\bend\b.*\n.*\bdef\b/)
-          end
-  end
-
 end

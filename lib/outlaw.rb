@@ -42,9 +42,7 @@ module Outlaw
   self.ignore_types   = [:on_sp, :on_nl, :on_ignored_nl, :on_rparen, :on_lparen]
   WHITESPACE          = [:on_sp, :on_nl, :on_ignored_nl]
   VERTICAL_WHITESPACE = [:on_nl, :on_ignored_nl]
-  RULE_CASES          = [:whitespace_sensitive, :vertical_whitespace_sensitive]
-  FUNCTION_CASES      = [:disjoint_code_seperator]
-  SPECIAL_CASES       = RULE_CASES + FUNCTION_CASES
+  SPECIAL_CASES       = [:whitespace_sensitive, :vertical_whitespace_sensitive]
 
   CORE_CLASSES_FILE   = File.expand_path("../../data/core_classes.txt", __FILE__)
   CORE_CLASS          = File.readlines(CORE_CLASSES_FILE).map &:chomp
