@@ -12,9 +12,9 @@ module Outlaw
   extend self
   attr_accessor :ignore_types, :param_types
 
-  def outlaw(pattern, message=nil)
+  def outlaw(pattern, message=nil, options={})
     if pattern.kind_of?(String)
-      rule = Rule.new(pattern, message)
+      rule = Rule.new(pattern, message, options)
       Outlaw::Enforcement.add(rule)
     else
       Outlaw::Enforcement.add(self.send(pattern))
@@ -22,7 +22,16 @@ module Outlaw
   end
 
   def enforce(dir=".")
-    Outlaw::Enforcement.process_directory(dir)
+    Outlaw::Enforcement.process_directory(dir, :stdout)
+  end
+
+  def validate_files(files)
+    files.reduce(error: false, output:"") do |file, results|
+      error, output = Outlaw::Enforcement.process_file(file)
+      results[:error] ||= error
+      results[:output] += output
+      results
+    end
   end
 
   def post_install(gem_installer)
