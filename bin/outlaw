@@ -18,4 +18,4 @@ else
       '/examples/.outlawed.example') {|f| Outlaw.module_eval(f.read)}
 end
 
-puts Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")
+Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")

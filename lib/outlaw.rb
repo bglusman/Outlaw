@@ -25,7 +25,7 @@ module Outlaw
   end
 
   def validate_files(files)
-    files.reduce(error: false, output:"") do |file, results|
+    files.reduce(error: false, output:"") do |results, file|
       error, output = Outlaw::Enforcement.process_file(file)
       results[:error] ||= error
       results[:output] += output
