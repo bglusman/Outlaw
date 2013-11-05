@@ -1,11 +1,16 @@
 module Outlaw
   class Rule
-    attr_reader :message, :pattern, :detection_block
+    attr_reader :message, :pattern, :detection_block, :warning
     attr_accessor :modifications
-    def initialize(pattern, message=nil, &detection_block)
+    def initialize(pattern, message=nil, options={}, &detection_block)
       @pattern          = pattern
       @message          = message ? message : "Don't do this: #{pattern}"
+      @warning          = options[:warning] || options[:info]
       @detection_block  = detection_block
+    end
+
+    def warning?
+      warning
     end
 
     def violation?(code)
