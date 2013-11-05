@@ -14,7 +14,7 @@ module Outlaw
     end
 
     def violation?(code)
-      @detection_block = LawParser.parse(self) if detection_block.nil?
+      @detection_block = LawParser.parse(pattern, self) if detection_block.nil?
       detect_violation(code)
     end
 
@@ -60,11 +60,11 @@ module Outlaw
           code = program[index]
           part = pattern[pattern_index]
           return false if code.nil?
-          if part.kind_of?(Proc)
-            return false unless part.call(self, pattern[pattern_index+1], program, index)
-            next                #^require all function cases must take these 4 arguments
-          end
           (index += 1 && next) if Outlaw.ignore_types.include?(token_type(code))
+          if part.kind_of?(Proc)
+            return false unless part.call(pattern[pattern_index+1], program, index)
+            next                #^require all function cases must take these 3 arguments
+          end
           return false unless match_token?(code, part, params[part])
           pattern_index +=1
           return true if pattern_index >= pattern.length
