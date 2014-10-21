@@ -8,4 +8,5 @@ end
 task :default => 'test'
 task :test do
   sh "ruby test/outlaw_test.rb"
+  sh "ruby test/debt_test.rb"
 end

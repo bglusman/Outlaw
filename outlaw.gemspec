@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "pre-commit", "~> 0.10.0"
   s.add_runtime_dependency "pry"
+  s.add_development_dependency "debt_ceiling", "~> 0.0.6"
   s.add_development_dependency "rake", "~> 0.9.0"
   s.add_development_dependency "minitest"
 end

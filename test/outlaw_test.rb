@@ -146,6 +146,7 @@ module Outlaw
     end
 
     it "correctly builds whitespace sensitive rule" do
+      skip('not yet implemented')
       code9 = ":vertical_whitespace_sensitive end\ndef"
       rule9 = Rule.new(code9)
 
