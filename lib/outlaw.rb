@@ -3,9 +3,6 @@ require_relative 'outlaw/law_parser'
 require_relative 'outlaw/enforcement'
 require_relative 'outlaw/rule'
 require_relative 'outlaw/rule_methods'
-require_relative 'outlaw/post_install'
-
-
 
 module Outlaw
   extend self
@@ -31,10 +28,6 @@ module Outlaw
       results[:output] += output
       results
     end
-  end
-
-  def post_install(gem_installer)
-    PostInstall.new(gem_installer)
   end
 
   #these come from ripper's Lexer

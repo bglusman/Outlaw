@@ -1,11 +1,7 @@
 # -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
+lib = File.expand_path("lib", __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "outlaw/version"
-
-module ::Gem
- post_install {|gem_installer| puts 'in hook'; Outlaw.post_install(gem_installer) }
-end
 
 Gem::Specification.new do |s|
   s.name        = "outlaw"
@@ -15,7 +11,6 @@ Gem::Specification.new do |s|
   s.email       = ["brian@neomindlabs.com"]
   s.homepage    = "https://github.com/bglusman/Outlaw"
   s.summary     = "Outlaw helps you enforce your opinions to keep bad code out your projects."
-  s.rubyforge_project = "outlaw"
   s.extensions = ["Rakefile"]
 
   s.description = <<-DESC
@@ -29,11 +24,15 @@ Gem::Specification.new do |s|
       Outlaw was a personal project for Mendicant University, Session 10 in Jan '12
   DESC
 
-
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = `git ls-files -z`.split("\0")
+  s.test_files    = `git ls-files -z -- test/*`.split("\0")
+  s.executables   = `git ls-files -z -- bin/*`.split("\0").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  s.post_install_message = <<POST_INSTALL
+
+The law is on to you, better disappear into the wind.
+
+POST_INSTALL
 
   s.add_runtime_dependency "pre-commit", "~> 0.10.0"
   s.add_runtime_dependency "pry"
