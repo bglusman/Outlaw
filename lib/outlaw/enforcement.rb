@@ -1,47 +1,43 @@
 module Outlaw
   class Enforcement
     class << self
-      attr_reader :rules
-      def add(rule)
+      def rules
         @rules ||= []
-        @rules << rule
       end
 
-      def process_directory(path, output=:destructured)
-        results = {error: nil, output:""}
+      def add(rule)
+        rules << rule
+      end
+
+      def process_directory(path)
+        results = []
         Dir.foreach(path) do |entry|
           next if entry == '.' or entry == '..'
-          result = if File.directory?("#{path}/#{entry}")
-                      process_directory("#{path}/#{entry}", output)
-                    else
-                      handle("#{path}/#{entry}")
-                    end
-          results[:error] ||= result[:error]
-          results[:output] += result[:output] if result[:output]
+          f = File.join(path, entry)
+          if File.directory?(f)
+            results += process_directory(f)
+          else
+            results << handle(f)
+          end
         end
-        puts results[:output] if (output == :stdout && results[:output].length > 0)
-        results
+        results.compact
       end
 
-      def process_file(file)
-        handle(file).values
+      def violation(file, rule)
+        ["Outlaw Violation in file: #{file}",
+         "Restriction:",
+         rule.pattern,
+         rule.message,
+         nil
+        ].join "\n"
       end
 
       def handle(file)
-        if file.match(/.rb$/)
-          text = File.open(file) {|f| f.read}
-          rules.reduce(error: false, output:"") do |results, rule|
-            if rule.violation?(text)
-              results[:output] += ("Outlaw Violation in file:"   +
-                                  "#{file}\nRestriction:\n"
-                                  "#{rule.pattern}\n#{rule.message}\n\n")
-              results[:error] = true unless rule.warning?
-            end
-            results
-          end
-        else
-          {}
-        end
+        return unless file.match(/.rb\z/)
+        text = File.open(file) { |f| f.read }
+        rules.map do |rule|
+          violation(file, rule) if rule.violation?(text)
+        end.compact
       end
     end
   end

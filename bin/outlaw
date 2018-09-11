@@ -1,21 +1,30 @@
 #!/usr/bin/env ruby
 
-require_relative "../lib/outlaw"
-if File.exists?(Dir.pwd + '/.outlawed')
-   File.open(Dir.pwd + "/.outlawed") {|f| Outlaw.module_eval(f.read)}
-elsif File.exists?(Dir.home + '/.outlawed')
-   File.open(Dir.home + '/.outlawed') {|f| Outlaw.module_eval(f.read)}
-else
-  puts "
+$LOAD_PATH.unshift File.expand_path("..", __dir__)
+require "outlaw"
+
+def default_example
+  gemdir = %x(gem which outlaw).chop
+  fn = File.join(File.dirname(File.dirname(gemdir)), "examples", ".outlawed.example")
+  warn "
   ***NOTICE:***
   Using example .outlawed file, which can be copied and customized from
-  #{File.dirname(File.dirname(`gem which outlaw`.chop)) + '/examples/.outlawed.example'}\n
+  #{fn}\n
   place .outlawed file in project directory and/or home directories, outlaw looks
   at pwd first for ./outlawed and then at ~/.outlawed and defaults to example
   if neither is found\n\n"
-
-   File.open(File.dirname(File.dirname(`gem which outlaw`.chop)) +
-      '/examples/.outlawed.example') {|f| Outlaw.module_eval(f.read)}
+  fn
 end
 
-Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")
+fname = [
+  File.join(Dir.pwd, ".outlawed"),
+  File.join(Dir.home, ".outlawed"),
+].find { |fn| File.exist? fn } || default_example
+
+open(fname) { |f| Outlaw.module_eval(f.read) }
+
+if (violations = Outlaw.enforce(ARGV[0] ? ARGV[0] : ".")).any?
+  warn violations
+  exit 1
+end
+
